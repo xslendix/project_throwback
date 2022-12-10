@@ -1,0 +1,24 @@
+#version 120
+
+varying vec3 fragPosition;
+varying vec2 fragTexCoord;
+varying vec4 fragColor;
+varying vec3 fragNormal;
+
+uniform sampler2D texture0;
+uniform vec4 colDiffuse;
+
+uniform float fogDensity;
+
+void main()
+{
+  vec4 texelColor = texture2D(texture0, fragTexCoord);
+  const vec4 fogColor = vec4(0, 0, 0, 1.0);
+
+  vec4 texelColor = texture(texture0, fragTexCoord);
+  vec4 finalColor = texelColor*colDiffuse;
+  float dist = length(viewPos - fragPosition);
+  float fogFactor = 1.0/exp((dist*fogDensity)*(dist*fogDensity));
+
+  gl_FragColor = mix(fogColor, finalColor, fogFactor);
+}
